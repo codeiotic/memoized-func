@@ -58,3 +58,45 @@ test("Nested Functions", () => {
 	result();
 	expect(returnCallback).toHaveBeenCalledTimes(1);
 });
+
+test("Performance tests", () => {
+	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
+		(x: number) => x + 1
+	);
+	const memoized: (params: number) => number = memoizedFunction(mockCallback);
+
+	const start: number = Date.now();
+
+	for (let i: number = 0; i < 100000; i++) {
+		memoized(i);
+	}
+	const end: number = Date.now();
+
+	expect(end - start).toBeLessThan(100);
+});
+
+test("Passing heavy number of functions", () => {
+	const INITIAL_LIMIT: 1000 = 1000;
+
+	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
+		(x: number) => x + 1
+	);
+	const memoized: (params: number) => number = memoizedFunction(mockCallback);
+
+	for (let i: number = 0; i < INITIAL_LIMIT; i++) {
+		memoized(i);
+	}
+
+	expect(mockCallback).toHaveBeenCalledTimes(INITIAL_LIMIT);
+
+	memoized(23);
+	memoized(24);
+	memoized(234);
+	memoized(106);
+
+	expect(mockCallback).toHaveBeenCalledTimes(INITIAL_LIMIT);
+
+	memoized(2342);
+
+	expect(mockCallback).toHaveBeenCalledTimes(INITIAL_LIMIT + 1);
+});
