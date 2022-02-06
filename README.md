@@ -1,6 +1,6 @@
-# Memoized Function
+# Memoize Function
 
-This is a simple project that contains a Memoized Function.
+This is a simple project that contains a function which memoizes that function.
 
 It simply uses the built in `Map` as the cache. You can use this to calculate expensive functions, which will save memory.
 
