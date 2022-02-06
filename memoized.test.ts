@@ -1,10 +1,10 @@
-import memoizedFunction from "./memoized";
+import memoizeFunction from "./memoized";
 
 test("Memoized function works", () => {
 	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
 		(x: number) => x + 1
 	);
-	const memoized: (params: number) => number = memoizedFunction(mockCallback);
+	const memoized: (params: number) => number = memoizeFunction(mockCallback);
 
 	expect(memoized).toBeInstanceOf(Function);
 	expect(memoized(1)).toBe(2);
@@ -18,7 +18,7 @@ test("Memoized works with different arguments", () => {
 	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
 		(x: number) => x + 1
 	);
-	const memoized: (params: number) => number = memoizedFunction(mockCallback);
+	const memoized: (params: number) => number = memoizeFunction(mockCallback);
 
 	expect(memoized(1)).toBe(2);
 	expect(mockCallback).toHaveBeenCalledTimes(1);
@@ -48,7 +48,7 @@ test("Nested Functions", () => {
 	});
 
 	const memoized: (params: jest.Mock<any, any>) => jest.Mock<any, any> =
-		memoizedFunction(mockCallback);
+		memoizeFunction(mockCallback);
 
 	let result: jest.Mock<any, any> = memoized(jest.fn());
 
@@ -63,7 +63,7 @@ test("Performance tests", () => {
 	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
 		(x: number) => x + 1
 	);
-	const memoized: (params: number) => number = memoizedFunction(mockCallback);
+	const memoized: (params: number) => number = memoizeFunction(mockCallback);
 
 	const start: number = Date.now();
 
@@ -81,7 +81,7 @@ test("Passing heavy number of functions", () => {
 	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
 		(x: number) => x + 1
 	);
-	const memoized: (params: number) => number = memoizedFunction(mockCallback);
+	const memoized: (params: number) => number = memoizeFunction(mockCallback);
 
 	for (let i: number = 0; i < INITIAL_LIMIT; i++) {
 		memoized(i);

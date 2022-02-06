@@ -1,7 +1,7 @@
-import { MemoizedFucntion, Func, Cache } from "./types";
+import { MemoizeFucntion, Func, Cache } from "./types";
 
-const memoizedFunction: MemoizedFucntion = <T>(func: Func<T>) => {
-	const cache: Cache<T> = new Map<T, T>();
+const memoizeFunction: MemoizeFucntion = <T>(func: Func<T>) => {
+	const cache: Cache<T> = new Map();
 
 	return (param: T) => {
 		if (cache.has(param)) {
@@ -13,4 +13,4 @@ const memoizedFunction: MemoizedFucntion = <T>(func: Func<T>) => {
 	};
 };
 
-export default memoizedFunction;
+export default memoizeFunction;
