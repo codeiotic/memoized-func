@@ -1,7 +1,7 @@
-const memoizedFunction: <T>(func: (param: T) => T) => (params: T) => T = <T>(
-	func: (param: T) => T
-) => {
-	const cache: Map<T, T> = new Map<T, T>();
+import { MemoizedFucntion, Func, Cache } from "./types";
+
+const memoizedFunction: MemoizedFucntion = <T>(func: Func<T>) => {
+	const cache: Cache<T> = new Map<T, T>();
 
 	return (param: T) => {
 		if (cache.has(param)) {
