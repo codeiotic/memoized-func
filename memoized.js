@@ -3,7 +3,7 @@ exports.__esModule = true;
 /**
  * Memoizes the function passed in.
  * Use this function to memoize **expensive functions**.
- *
+ * ---
  * Here's an example using **JavaScript**:
  * ```ts
  * const memoized = memoizeFunction((a) => a * 100000);
