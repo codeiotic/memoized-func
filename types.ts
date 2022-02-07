@@ -1,3 +1,3 @@
-export type MemoizeFucntion = <T>(func: (param: T) => T) => (params: T) => T;
-export type Func<T> = (param: T) => T;
-export type Cache<T> = Map<T, T>;
+export type MemoizeFunction = <T, R>(func: (param: T) => R) => (params: T) => R;
+export type Func<P, R> = (param: P) => R;
+export type Cache<P, R> = Map<P, R>;

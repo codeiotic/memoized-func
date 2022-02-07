@@ -7,7 +7,7 @@ It simply uses the built in `Map` as the cache. You can use this to calculate ex
 Here's a small example:
 
 ```ts
-import { memoizeFunction } from "./memoized.ts";
+import { memoizeFunction } from "./memoized";
 
 const memoizedFunction = memoizeFunction((param) => {
 	// Some expensive calculations...

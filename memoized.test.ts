@@ -75,7 +75,7 @@ test("Performance tests", () => {
 	expect(end - start).toBeLessThan(100);
 });
 
-test("Passing heavy number of functions", () => {
+test("Calling the function multiple times", () => {
 	const INITIAL_LIMIT: 1000 = 1000;
 
 	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
@@ -93,10 +93,23 @@ test("Passing heavy number of functions", () => {
 	memoized(24);
 	memoized(234);
 	memoized(106);
+	memoized(146);
+	memoized(298);
+	memoized(319);
+	memoized(425);
+	memoized(555);
+	memoized(626);
+	memoized(734);
+	memoized(825);
+	memoized(999);
 
 	expect(mockCallback).toHaveBeenCalledTimes(INITIAL_LIMIT);
 
 	memoized(2342);
 
 	expect(mockCallback).toHaveBeenCalledTimes(INITIAL_LIMIT + 1);
+
+	expect(memoized(1324)).toBe(1325);
+
+	expect(mockCallback).toHaveBeenCalledTimes(INITIAL_LIMIT + 2);
 });
