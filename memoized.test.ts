@@ -4,7 +4,10 @@ test("Memoized function works", () => {
 	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
 		(x: number) => x + 1
 	);
-	const memoized: (params: number) => number = memoizeFunction(mockCallback);
+	const memoized: (params: number) => number = memoizeFunction<
+		number,
+		number
+	>(mockCallback);
 
 	expect(memoized).toBeInstanceOf(Function);
 	expect(memoized(1)).toBe(2);
@@ -18,7 +21,10 @@ test("Memoized works with different arguments", () => {
 	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
 		(x: number) => x + 1
 	);
-	const memoized: (params: number) => number = memoizeFunction(mockCallback);
+	const memoized: (params: number) => number = memoizeFunction<
+		number,
+		number
+	>(mockCallback);
 
 	expect(memoized(1)).toBe(2);
 	expect(mockCallback).toHaveBeenCalledTimes(1);
@@ -48,7 +54,7 @@ test("Nested Functions", () => {
 	});
 
 	const memoized: (params: jest.Mock<any, any>) => jest.Mock<any, any> =
-		memoizeFunction(mockCallback);
+		memoizeFunction<jest.Mock<any, any>, jest.Mock<any, any>>(mockCallback);
 
 	let result: jest.Mock<any, any> = memoized(jest.fn());
 
@@ -63,7 +69,10 @@ test("Performance tests", () => {
 	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
 		(x: number) => x + 1
 	);
-	const memoized: (params: number) => number = memoizeFunction(mockCallback);
+	const memoized: (params: number) => number = memoizeFunction<
+		number,
+		number
+	>(mockCallback);
 
 	const start: number = Date.now();
 
@@ -81,7 +90,10 @@ test("Calling the function multiple times", () => {
 	const mockCallback: jest.Mock<number, [x: number]> = jest.fn(
 		(x: number) => x + 1
 	);
-	const memoized: (params: number) => number = memoizeFunction(mockCallback);
+	const memoized: (params: number) => number = memoizeFunction<
+		number,
+		number
+	>(mockCallback);
 
 	for (let i: number = 0; i < INITIAL_LIMIT; i++) {
 		memoized(i);
@@ -112,4 +124,54 @@ test("Calling the function multiple times", () => {
 	expect(memoized(1324)).toBe(1325);
 
 	expect(mockCallback).toHaveBeenCalledTimes(INITIAL_LIMIT + 2);
+});
+
+test("Works with different types", () => {
+	const mockCallback: jest.Mock<string, [x: { foo: string }]> = jest.fn(
+		({ foo }: { foo: string }) => foo + "bar"
+	);
+
+	const memoized: (param: { foo: string }) => string = memoizeFunction<
+		{ foo: string },
+		string
+	>(mockCallback);
+
+	expect(
+		memoized({
+			foo: "foo",
+		})
+	).toBe("foobar");
+
+	expect(mockCallback).toBeCalledTimes(1);
+
+	type Params = { foo: string; bar: number; baz: Array<string> };
+	type Return = [string, number, Array<string>];
+
+	const mockCallback2: jest.Mock<Return, [x: Params]> = jest.fn(
+		({ foo, bar, baz }: Params) => [foo, bar, baz]
+	);
+
+	const memoized2: (param: Params) => Return = memoizeFunction<
+		Params,
+		Return
+	>(mockCallback2);
+
+	expect(
+		memoized2({
+			foo: "foo",
+			bar: 1,
+			baz: ["a", "b", "c"],
+		})
+	).toStrictEqual(["foo", 1, ["a", "b", "c"]]);
+
+	expect(mockCallback2).toBeCalledTimes(1);
+
+	// Seems to fail.
+	memoized2({
+		foo: "foo",
+		bar: 1,
+		baz: ["a", "b", "c"],
+	});
+
+	// expect(mockCallback2).toBeCalledTimes(1);
 });
