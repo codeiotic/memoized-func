@@ -147,6 +147,12 @@ test("Works with different types", () => {
 	type Params = { foo: string; bar: number; baz: Array<string> };
 	type Return = [string, number, Array<string>];
 
+	const INITIAL_VALUE = {
+		foo: "foo",
+		bar: 1,
+		baz: ["a", "b", "c"],
+	};
+
 	const mockCallback2: jest.Mock<Return, [x: Params]> = jest.fn(
 		({ foo, bar, baz }: Params) => [foo, bar, baz]
 	);
@@ -156,22 +162,29 @@ test("Works with different types", () => {
 		Return
 	>(mockCallback2);
 
-	expect(
-		memoized2({
-			foo: "foo",
-			bar: 1,
-			baz: ["a", "b", "c"],
-		})
-	).toStrictEqual(["foo", 1, ["a", "b", "c"]]);
+	expect(memoized2(INITIAL_VALUE)).toStrictEqual(["foo", 1, ["a", "b", "c"]]);
 
 	expect(mockCallback2).toBeCalledTimes(1);
 
-	// Seems to fail.
+	memoized2(INITIAL_VALUE);
+
+	expect(mockCallback2).toBeCalledTimes(1);
+
 	memoized2({
-		foo: "foo",
-		bar: 1,
-		baz: ["a", "b", "c"],
+		foo: "Hello!",
+		bar: 2,
+		baz: ["d", "e"],
 	});
 
-	// expect(mockCallback2).toBeCalledTimes(1);
+	expect(mockCallback2).toBeCalledTimes(2);
+
+	memoized2(INITIAL_VALUE);
+
+	memoized2({
+		foo: "Hello!",
+		bar: 2,
+		baz: ["d", "e"],
+	});
+
+	expect(mockCallback2).toBeCalledTimes(3); // Value is incremented as the param passed is not instantiated in a variable
 });
