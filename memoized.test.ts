@@ -47,16 +47,20 @@ test("Nested Functions", () => {
 	 * If the same function is passed to the `memoizedFunction` again, it should return the same function without calling it.
 	 */
 
-	const returnCallback: jest.Mock<any, any> = jest.fn();
+	type MockType = jest.Mock<any, any>;
 
-	const mockCallback: jest.Mock<jest.Mock<any, any>, []> = jest.fn(() => {
+	const returnCallback: MockType = jest.fn();
+
+	const mockCallback: jest.Mock<MockType, []> = jest.fn(() => {
 		return returnCallback;
 	});
 
-	const memoized: (params: jest.Mock<any, any>) => jest.Mock<any, any> =
-		memoizeFunction<jest.Mock<any, any>, jest.Mock<any, any>>(mockCallback);
+	const memoized: (params: MockType) => MockType = memoizeFunction<
+		MockType,
+		MockType
+	>(mockCallback);
 
-	let result: jest.Mock<any, any> = memoized(jest.fn());
+	let result: MockType = memoized(jest.fn());
 
 	expect(result).toBe(returnCallback);
 	expect(mockCallback).toHaveBeenCalledTimes(1);
@@ -147,7 +151,7 @@ test("Works with different types", () => {
 	type Params = { foo: string; bar: number; baz: Array<string> };
 	type Return = [string, number, Array<string>];
 
-	const INITIAL_VALUE = {
+	const INITIAL_VALUE: Params = {
 		foo: "foo",
 		bar: 1,
 		baz: ["a", "b", "c"],
