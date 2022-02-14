@@ -24,12 +24,11 @@ exports.__esModule = true;
  * @returns The memoized function.
  */
 var memoizeFunction = function (func) {
-	var cache = new Map();
-	return function (param) {
-		if (cache.has(param)) return cache.get(param);
-		var result = func(param);
-		cache.set(param, result);
-		return result;
-	};
+    var cache = new Map();
+    return function (param) {
+        if (cache.has(param))
+            return cache.get(param);
+        return cache.set(param, func(param)).get(param);
+    };
 };
 exports["default"] = memoizeFunction;
