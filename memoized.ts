@@ -28,9 +28,7 @@ const memoizeFunction: MemoizeFunction = <P, R>(func: Func<P, R>) => {
 
 	return (param: P) => {
 		if (cache.has(param)) return cache.get(param);
-		const result: R = func(param);
-		cache.set(param, result);
-		return result;
+		return cache.set(param, func(param)).get(param);
 	};
 };
 
